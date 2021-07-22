@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <title>Weather Dashboard</title>
+  </head>
+  <body class="flex-column min-100-vh">
+    <header class="hero">
+      <h1 class="app-title"><i class="fa fa-cloud-sun"></i> Weather Dashboard</h1>
+      <p>
+        Weather Dashboard
+      </p>
+      <p id='date'></p>
+    </header>
+
+    <main class="flex-row justify-space-between">
+      <div class="col-12 col-md-4">
+        <div class="card">
+          <h3 class="card-header text-uppercase">Search by zipcode</h3>
+          <form id="user-form" class="card-body">
+            <label class="form-label" for="zipcode">zipcode</label>
+            <input
+              name="zipcode"
+              id="zipcode"
+              type="text"
+              autofocus="true"
+              class="form-input"
+            />
+            <button id="submit "type="submit" class="btn">Get Weather</button>
+          </form>
+        </div>
+        <div class="card">
+          <h3 class="card-header text-uppercase">
+            Forecast Predictions
+          </h3>
+          <div class="card-body" id="language-buttons">
+            <button class="btn" data-language="HTML" value="lowercase">
+              Today's Forecast
+            </button>
+            <button class="btn" data-language="CSS" value="lowercase">
+              Weekly Forecast
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-8">
+        <h2 class="subtitle">Showing Weather for: <span id="city"></span></h2>
+        <div id="weatherContainer" class=list-group"></div>
+      </div>
+    </main>
+    <script src="./assets/js/script.js"></script>
+  </body>
+</html>
+
