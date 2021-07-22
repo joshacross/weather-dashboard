@@ -21,7 +21,8 @@
       <p>
         Weather Dashboard
       </p>
-      <p id='date'></p>
+      <p id='date'>Today's Date is: <span id="date"></span></p>
+      <p>The time is currently: <span id="time"></span></p>
     </header>
 
     <main class="flex-row justify-space-between">
@@ -45,10 +46,10 @@
             Forecast Predictions
           </h3>
           <div class="card-body" id="language-buttons">
-            <button class="btn" data-language="HTML" value="lowercase">
+            <button id='today' class="btn" data-language="HTML" value="lowercase">
               Today's Forecast
             </button>
-            <button class="btn" data-language="CSS" value="lowercase">
+            <button id='week' class="btn" data-language="CSS" value="lowercase">
               Weekly Forecast
             </button>
           </div>
