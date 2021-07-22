@@ -50,6 +50,7 @@ let cloudyStatement = document.querySelector('.cloudyStatement');
 let snowStatement = document.querySelector('.snowStatement');
 let sunnyStatement = document.querySelector('.sunnyStatement');
 let rainyStatement = document.querySelector('.rainyStatement');
+let data;
 
 // Weather Api Fetch//
 getWeatherData = () => {
@@ -60,6 +61,9 @@ getWeatherData = () => {
       .then(function (response) {
         if (response.ok) {
             console.log(response);
+            let dataDisplay = document.createElement('p');
+            dataDisplay.textContent= response;
+            weatherContainer.appendChild(dataDisplay);
           return response.json()
 
         } else {
