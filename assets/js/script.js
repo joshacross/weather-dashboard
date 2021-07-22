@@ -61,15 +61,13 @@ getWeatherData = () => {
       .then(function (response) {
         if (response.ok) {
             console.log(response);
-            let dataDisplay = document.createElement('p');
-            dataDisplay.textContent= response;
-            weatherContainer.appendChild(dataDisplay);
           return response.json()
 
         } else {
           throw new Error('Something went wrong.');
         }
       }).then(function (data) {
+        console.log(data.main);
         let weatherIcon = data.weather[0].icon;
         animatedIcon(weatherIcon);
   
