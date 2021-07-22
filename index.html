@@ -17,12 +17,12 @@
   </head>
   <body class="flex-column min-100-vh">
     <header class="hero">
-      <h1 class="app-title"><i class="fa fa-cloud-sun"></i> Weather Dashboard</h1>
-      <p>
-        Weather Dashboard
-      </p>
-      <p id='date'>Today's Date is: <span id="date"></span></p>
-      <p>The time is currently: <span id="time"></span></p>
+      <h1 class="app-title">
+        <i class="fa fa-cloud-sun"></i> Weather Dashboard
+      </h1>
+      <p>Weather Dashboard</p>
+      <p>Today's Date is: <span id="dateDisplay"></span></p>
+      <p>The time is currently: <span id="timeDisplay"></span></p>
     </header>
 
     <main class="flex-row justify-space-between">
@@ -38,29 +38,100 @@
               autofocus="true"
               class="form-input"
             />
-            <button id="submit "type="submit" class="btn">Get Weather</button>
+            <button id="getWeatherBtn" class="btn">Get Weather</button>
           </form>
         </div>
         <div class="card">
-          <h3 class="card-header text-uppercase">
-            Forecast Predictions
-          </h3>
+          <h3 class="card-header text-uppercase">Forecast Predictions</h3>
           <div class="card-body" id="language-buttons">
-            <button id='today' class="btn" data-language="HTML" value="lowercase">
+            <button
+              id="todayBtn"
+              class="btn"
+              data-language="HTML"
+              value="lowercase"
+            >
               Today's Forecast
             </button>
-            <button id='week' class="btn" data-language="CSS" value="lowercase">
+            <button id="week" class="btn" data-language="CSS" value="lowercase">
               Weekly Forecast
             </button>
           </div>
         </div>
       </div>
       <div class="col-12 col-md-8">
-        <h2 class="subtitle">Showing Weather for: <span id="city"></span></h2>
-        <div id="weatherContainer" class=list-group"></div>
+        <h2 class="subtitle">
+          Showing Weather for: <span id="city">Nashville</span>
+        </h2>
       </div>
+      <section id="weatherAPI" class="col-12 col-md-8">
+        <article>
+          <h3 id="forecast">Showing Weather For: Nashville</h3>
+          <!--weather icon with temperature, (that dynamically affects the page?) -->
+          <div id="weatherContainer">
+            <div id="sunShower" class="icon sun-shower">
+              <div class="cloud"></div>
+              <div class="sun">
+                <div class="rays"></div>
+              </div>
+              <div class="rain"></div>
+            </div>
+
+            <div id="thunderStorm" class="icon thunder-storm">
+              <div class="cloud"></div>
+              <div class="lightning">
+                <div class="bolt"></div>
+                <div class="bolt"></div>
+              </div>
+            </div>
+
+            <div id="cloudy" class="icon cloudy">
+              <div class="cloud"></div>
+              <div class="cloud"></div>
+            </div>
+
+            <div id="snow" class="icon flurries">
+              <div class="cloud"></div>
+              <div class="snow">
+                <div class="flake"></div>
+                <div class="flake"></div>
+              </div>
+            </div>
+
+            <div id="sunny" class="icon sunny">
+              <div class="sun">
+                <div class="rays"></div>
+              </div>
+            </div>
+
+            <div id="rainy" class="icon rainy">
+              <div class="cloud"></div>
+              <div class="rain"></div>
+            </div>
+          </div>
+          <div id="weatherStatements">
+            <h3 class="statement sunShowerStatement">
+              Scattered showers today, take an umbrella with you.
+            </h3>
+            <h3 class="statement thunderStormStatement">
+              Severe thunderstorms, stay inside and stay safe.
+            </h3>
+            <h3 class="statement cloudyStatement">
+              It's going to be cloudy, but you always brighten up my day!
+            </h3>
+            <h3 class="statement snowStatement">
+              Dress warm and wear good boots, it may snow today.
+            </h3>
+            <h3 class="statement sunnyStatement">
+              Perfect day to be outside, be sure to enjoy it.
+            </h3>
+            <h3 class="statement rainyStatement">
+              Rain expected today, maybe time to work on some indoor projects.
+            </h3>
+          </div>
+          <div id="temp"></div>
+        </article>
+      </section>
     </main>
     <script src="./assets/js/script.js"></script>
   </body>
 </html>
-
