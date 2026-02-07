@@ -17,119 +17,98 @@
   </head>
   <body class="flex-column min-100-vh">
     <header class="hero">
-      <h1 class="app-title">
-        <i class="fa fa-cloud-sun"></i> Weather Dashboard
-      </h1>
-      <p>Weather Dashboard</p>
-      <p>Today's Date is: <span id="dateDisplay"></span></p>
-      <p>The time is currently: <span id="timeDisplay"></span></p>
+      <div>
+        <h1 class="app-title">
+          <i class="fa fa-cloud-sun"></i> Weather Dashboard
+        </h1>
+        <p class="subtitle">Live local conditions and a 5-day outlook.</p>
+      </div>
+      <div class="hero-meta">
+        <p>Today: <span id="dateDisplay"></span></p>
+        <p>Local time: <span id="timeDisplay"></span></p>
+      </div>
     </header>
 
     <main class="flex-row justify-space-between">
-      <div class="col-12 col-md-4">
-        <div class="card">
-          <h3 class="card-header text-uppercase">Search by zipcode</h3>
+      <aside class="col-12 col-md-4">
+        <div class="card glass">
+          <h3 class="card-header text-uppercase">Find a location</h3>
           <form id="user-form" class="card-body">
-            <label class="form-label" for="zipcode">zipcode</label>
-            <input
-              name="zipcode"
-              id="zipcode"
-              type="text"
-              autofocus="true"
-              class="form-input"
-            />
-            <button id="getWeatherBtn" class="btn">Get Weather</button>
+            <label class="form-label" for="zipcode">Zip code</label>
+            <div class="input-row">
+              <input
+                name="zipcode"
+                id="zipcode"
+                type="text"
+                placeholder="Enter ZIP code"
+                autocomplete="postal-code"
+                class="form-input"
+              />
+              <button id="getWeatherBtn" class="btn" type="submit">
+                Get Weather
+              </button>
+            </div>
+            <p class="hint">Tip: Try 37209 or 90210.</p>
           </form>
         </div>
-        <div class="card">
-          <h3 class="card-header text-uppercase">Forecast Predictions</h3>
-          <div class="card-body" id="language-buttons">
-            <button
-              id="todayBtn"
-              class="btn"
-              data-language="HTML"
-              value="lowercase"
-            >
-              Today's Forecast
-            </button>
-            <button id="week" class="btn" data-language="CSS" value="lowercase">
-              Weekly Forecast
-            </button>
+        <div class="card glass">
+          <h3 class="card-header text-uppercase">Status</h3>
+          <div class="card-body">
+            <p id="statusMessage" class="status-message">
+              Enter a zip code to see the latest weather.
+            </p>
           </div>
         </div>
-      </div>
-      <div class="col-12 col-md-8">
-        <section id="weatherAPI" class="col-12 col-md-8">
-          <article>
-            <h2 class="subtitle">
-              Showing Weather for: <span id="city">Nashville</span>
-            </h2>
-            <!--weather icon with temperature, (that dynamically affects the page?) -->
-            <div id="weatherContainer">
-              <div id="sunShower" class="icon sun-shower">
-                <div class="cloud"></div>
-                <div class="sun">
-                  <div class="rays"></div>
-                </div>
-                <div class="rain"></div>
-              </div>
+      </aside>
 
-              <div id="thunderStorm" class="icon thunder-storm">
-                <div class="cloud"></div>
-                <div class="lightning">
-                  <div class="bolt"></div>
-                  <div class="bolt"></div>
-                </div>
-              </div>
-
-              <div id="cloudy" class="icon cloudy">
-                <div class="cloud"></div>
-                <div class="cloud"></div>
-              </div>
-
-              <div id="snow" class="icon flurries">
-                <div class="cloud"></div>
-                <div class="snow">
-                  <div class="flake"></div>
-                  <div class="flake"></div>
-                </div>
-              </div>
-
-              <div id="sunny" class="icon sunny">
-                <div class="sun">
-                  <div class="rays"></div>
-                </div>
-              </div>
-
-              <div id="rainy" class="icon rainy">
-                <div class="cloud"></div>
-                <div class="rain"></div>
+      <section class="col-12 col-md-8">
+        <div class="card glass">
+          <div class="card-body weather-summary">
+            <div>
+              <p class="eyebrow">Current weather</p>
+              <h2 class="subtitle" id="locationName">Nashville, TN</h2>
+              <p id="conditionsText">Fetching the latest conditions...</p>
+            </div>
+            <div class="summary-metrics">
+              <img
+                id="weatherIcon"
+                class="weather-icon"
+                alt="Weather icon"
+                src=""
+              />
+              <div>
+                <p class="temp" id="temperature">--°</p>
+                <p class="feels" id="feelsLike">Feels like --°</p>
               </div>
             </div>
-            <div id="weatherStatements">
-              <h3 class="statement sunShowerStatement">
-                Scattered showers today, take an umbrella with you.
-              </h3>
-              <h3 class="statement thunderStormStatement">
-                Severe thunderstorms, stay inside and stay safe.
-              </h3>
-              <h3 class="statement cloudyStatement">
-                It's going to be cloudy, but you always brighten up my day!
-              </h3>
-              <h3 class="statement snowStatement">
-                Dress warm and wear good boots, it may snow today.
-              </h3>
-              <h3 class="statement sunnyStatement">
-                Perfect day to be outside, be sure to enjoy it.
-              </h3>
-              <h3 class="statement rainyStatement">
-                Rain expected today, maybe time to work on some indoor projects.
-              </h3>
+          </div>
+          <div class="card-body metrics-grid">
+            <div class="metric">
+              <span>Humidity</span>
+              <strong id="humidity">--%</strong>
             </div>
-            <div id="temp"></div>
-          </article>
-        </section>
-      </div>
+            <div class="metric">
+              <span>Wind</span>
+              <strong id="wind">-- mph</strong>
+            </div>
+            <div class="metric">
+              <span>High / Low</span>
+              <strong id="hiLow">--° / --°</strong>
+            </div>
+            <div class="metric">
+              <span>Visibility</span>
+              <strong id="visibility">-- mi</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="card glass">
+          <div class="card-body">
+            <h3 class="subtitle">5-day outlook</h3>
+            <div id="forecast" class="forecast-grid"></div>
+          </div>
+        </div>
+      </section>
     </main>
     <script src="./assets/js/script.js"></script>
   </body>
