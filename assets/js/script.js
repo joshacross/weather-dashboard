@@ -141,12 +141,19 @@ const fetchWeather = async (zip) => {
     );
 
     let currentData = null;
-    try {
-      currentData = await currentResponse.json();
-    } catch (parseError) {
-      // If the response was otherwise OK but we couldn't parse JSON, treat as a service error
-      if (currentResponse.ok) {
+    if (currentResponse.ok) {
+      try {
+        currentData = await currentResponse.json();
+      } catch (parseError) {
+        // If the response was OK but we couldn't parse JSON, treat as a service error
         throw new Error('Received malformed weather data from the service. Please try again later.');
+      }
+    } else {
+      // Try to parse error response, but don't fail if we can't
+      try {
+        currentData = await currentResponse.json();
+      } catch (parseError) {
+        // Ignore parse errors for error responses - we'll use status code instead
       }
     }
 
