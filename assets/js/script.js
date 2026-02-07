@@ -1,206 +1,138 @@
-//////////DOM/////////////
-var zipcode = document.getElementById('zipcode');
-var city = document.getElementById('city');
-// var week = document.getElementById('week').addEventListener('click', getWeatherForecast());
-// var submit = document.getElementById('submit').addEventListener('submit', getWeather());
-//////////////////////////
+const zipcodeInput = document.getElementById('zipcode');
+const form = document.getElementById('user-form');
+const statusMessage = document.getElementById('statusMessage');
+const locationName = document.getElementById('locationName');
+const conditionsText = document.getElementById('conditionsText');
+const weatherIcon = document.getElementById('weatherIcon');
+const temperature = document.getElementById('temperature');
+const feelsLike = document.getElementById('feelsLike');
+const humidity = document.getElementById('humidity');
+const wind = document.getElementById('wind');
+const hiLow = document.getElementById('hiLow');
+const visibility = document.getElementById('visibility');
+const forecastContainer = document.getElementById('forecast');
 
-/////////////////////////
+const API_KEY = '882d7b151f3175e892df45d1e68ea9dd';
+const DEFAULT_ZIP = '37209';
 
-//TIME Variables//
-var today = new Date();
-var dd = String(today.getDate()).padStart(2, '0');
-var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-var yyyy = today.getFullYear();
-var hrs = today.getHours();
-var mins = today.getMinutes();
-today = mm + '/' + dd + '/' + yyyy;
+const formatTime = () => {
+  const now = new Date();
+  const dateElDisplay = document.getElementById('dateDisplay');
+  const timeElDisplay = document.getElementById('timeDisplay');
 
-var time = hrs + ":" + mins;
+  const dateFormatter = new Intl.DateTimeFormat('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
 
-console.log(today, time);
-//////////////////////////
+  const timeFormatter = new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+  });
 
-//////TIME function //////
-var displayDate = function() {
-    // find date and time elements
-    var dateElDisplay = document.getElementById('dateDisplay');
-    var timeElDisplay = document.getElementById('timeDisplay');
-    // add display text
-    dateElDisplay.innerHTML = today;
-    timeElDisplay.innerHTML = time;
-}
+  dateElDisplay.textContent = dateFormatter.format(now);
+  timeElDisplay.textContent = timeFormatter.format(now);
+};
 
-displayDate();
-///////////////////////
+const setStatus = (message, tone = 'muted') => {
+  statusMessage.textContent = message;
+  statusMessage.dataset.tone = tone;
+};
 
-/////DISPLAY Zipcode/////
+const buildIconUrl = (icon) =>
+  `https://openweathermap.org/img/wn/${icon}@2x.png`;
 
-//WEATHER Variables///
-let weatherContainer = document.getElementById('weatherContainer');
-let thunderStorm = document.getElementById('thunderStorm');
-let cloudy = document.getElementById('cloudy');
-let snow = document.getElementById('snow');
-let sunny = document.getElementById('sunny');
-let rainy = document.getElementById('rainy');
-let sunShower = document.querySelector('#sunShower');
-let sunShowerStatement = document.querySelector('.sunShowerStatement');
-let thunderStormStatement = document.querySelector('.thunderStormStatement');
-let cloudyStatement = document.querySelector('.cloudyStatement');
-let snowStatement = document.querySelector('.snowStatement');
-let sunnyStatement = document.querySelector('.sunnyStatement');
-let rainyStatement = document.querySelector('.rainyStatement');
-let data;
+const updateCurrentWeather = (data) => {
+  const { name, sys, weather, main, wind: windData, visibility: visibilityData } = data;
+  const condition = weather[0];
 
-// Weather Api Fetch//
-getWeatherData = () => {
-    // format "open weather map" api url
-    let apiUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + 'nashville' + '&appid=882d7b151f3175e892df45d1e68ea9dd' + "&units=imperial";
-    // make a request to the url
-    fetch(apiUrl)
-      .then(function (response) {
-        if (response.ok) {
-            console.log(response);
-          return response.json()
+  locationName.textContent = `${name}, ${sys.country}`;
+  conditionsText.textContent = condition.description;
+  weatherIcon.src = buildIconUrl(condition.icon);
+  weatherIcon.alt = condition.description;
+  temperature.textContent = `${Math.round(main.temp)}°`;
+  feelsLike.textContent = `Feels like ${Math.round(main.feels_like)}°`;
+  humidity.textContent = `${main.humidity}%`;
+  wind.textContent = `${Math.round(windData.speed)} mph`;
+  hiLow.textContent = `${Math.round(main.temp_max)}° / ${Math.round(main.temp_min)}°`;
+  visibility.textContent = `${(visibilityData / 1609).toFixed(1)} mi`;
+};
 
-        } else {
-          throw new Error('Something went wrong.');
-        }
-      }).then(function (data) {
-        console.log(data.main);
-        let weatherIcon = data.weather[0].icon;
-        animatedIcon(weatherIcon);
-  
-        // a variable to hold temperature
-        let temperatureEl = data.main.temp;
-        // pass variable to function
-        showTemp(temperatureEl);
-  
-      }).catch(function (error) {
-        console.log(error);
-      });
-  };
-  
-  const showTemp = (temperatureEl) => {
-    // create an H4 element for temp
-    var tempEl = document.createElement("h4");
-    // add text content
-    tempEl.textContent = "The current temperature is " + temperatureEl + "˚F";
-    // add class to align content to center
-    tempEl.className = "text-center";
-    // append child
-    weatherContainer.append(tempEl);
-  };
+const buildForecastCards = (forecastList) => {
+  forecastContainer.innerHTML = '';
+  const daily = {};
 
-  animatedIcon = (weatherIcon) => {
-    /* hide html elements */
-    sunShower.setAttribute('class', 'hide');
-    sunShowerStatement.setAttribute('class', 'hide');
-    thunderStorm.setAttribute('class', 'hide');
-    thunderStormStatement.setAttribute('class', 'hide');
-    cloudy.setAttribute('class', 'hide');
-    cloudyStatement.setAttribute('class', 'hide');
-    snow.setAttribute('class', 'hide');
-    snowStatement.setAttribute('class', 'hide');
-    rainy.setAttribute('class', 'hide');
-    rainyStatement.setAttribute('class', 'hide');
-    sunny.setAttribute('class', 'hide');
-    sunnyStatement.setAttribute('class', 'hide');
-
-    /* Display correct icon for current weather */
-    if (weatherIcon === '10n' || weatherIcon === '10d' ||
-      weatherIcon === '09d' || weatherIcon === '09n') {
-        rainy.setAttribute('class', 'show');
-        rainyStatement.setAttribute('class', 'show');
-        return;
-    } if (weatherIcon === '50d' || weatherIcon === '50n' ||
-      weatherIcon === '02n' || weatherIcon === '02d' || weatherIcon === '03n' ||
-      weatherIcon === '03d' || weatherIcon === '04n' || weatherIcon === '04d') {
-        cloudy.setAttribute('class', 'show');
-        cloudyStatement.setAttribute('class', 'show');
-        return;
-    } if (weatherIcon === '01d' || weatherIcon === '01n') {
-        sunny.setAttribute('class', 'show');
-        sunnyStatement.setAttribute('class', 'show');
-        return;
-    } if (weatherIcon === '13d' || weatherIcon === '13n') {
-        snow.setAttribute('class', 'show');
-        snowStatement.setAttribute('class', 'show');
-        return;
-    } if (weatherIcon === '11d' || weatherIcon === '11n') {
-        thunderStorm.setAttribute('class', 'show');
-        thunderStormStatement.setAttribute('class', 'show');
-        return;
+  forecastList.forEach((entry) => {
+    const [date, time] = entry.dt_txt.split(' ');
+    if (!daily[date] || time === '12:00:00') {
+      daily[date] = entry;
     }
-  
+  });
+
+  Object.values(daily)
+    .slice(0, 5)
+    .forEach((entry) => {
+      const card = document.createElement('div');
+      card.className = 'forecast-card';
+
+      const date = new Date(entry.dt * 1000);
+      const dayName = new Intl.DateTimeFormat('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+      }).format(date);
+
+      card.innerHTML = `
+        <p class="eyebrow">${dayName}</p>
+        <img src="${buildIconUrl(entry.weather[0].icon)}" alt="${entry.weather[0].description}" />
+        <p class="forecast-temp">${Math.round(entry.main.temp)}°</p>
+        <p>${entry.weather[0].description}</p>
+      `;
+
+      forecastContainer.appendChild(card);
+    });
+};
+
+const fetchWeather = async (zip) => {
+  setStatus('Fetching the latest conditions...', 'info');
+
+  try {
+    const currentResponse = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&units=imperial&appid=${API_KEY}`
+    );
+
+    if (!currentResponse.ok) {
+      throw new Error('Unable to find that location. Please try another zip.');
+    }
+
+    const currentData = await currentResponse.json();
+    updateCurrentWeather(currentData);
+
+    const forecastResponse = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?zip=${zip},us&units=imperial&appid=${API_KEY}`
+    );
+
+    if (!forecastResponse.ok) {
+      throw new Error('Forecast data is unavailable right now.');
+    }
+
+    const forecastData = await forecastResponse.json();
+    buildForecastCards(forecastData.list);
+
+    setStatus(`Updated ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}.`);
+  } catch (error) {
+    setStatus(error.message, 'error');
   }
-  getWeatherData();
+};
 
-// const getWeatherData = () => {
-//     // set the Timelines GET endpoint as the target URL
-//     const getTimelineURL = "https://api.tomorrow.io/v4/timelines";
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const zipValue = zipcodeInput.value.trim() || DEFAULT_ZIP;
+  fetchWeather(zipValue);
+});
 
-//     // get your key from app.tomorrow.io/development/keys
-//     const apikey = "NXotJE61HZOY6tbotAEzU6sVRCYmTd7J";
-
-//     // pick the location, as a latlong pair
-//     let location = [40.758, -73.9855];
-
-//     // list the fields
-//     const fields = [
-//         "precipitationIntensity",
-//         "precipitationType",
-//         "windSpeed",
-//         "windGust",
-//         "windDirection",
-//         "temperature",
-//         "temperatureApparent",
-//         "cloudCover",
-//         "cloudBase",
-//         "cloudCeiling",
-//         "weatherCode",
-//     ];
-
-//     const units = "imperial";
-
-//     let apiUrl = getTimelineURL + "?q=" + location + apiKey + '&units=' + units;
-
-//     console.log(apiUrl);
-
-//     // const fetch = require("node-fetch");
-//     // const queryString = require('query-string');
-//     // const moment = require("moment");
-
-//     // set the timesteps, like "current", "1h" and "1d"
-//     const timesteps = ["current", "1h", "1d"];
-
-//     // configure the time frame up to 6 hours back and 15 days out
-//     const now = todaysDate;
-//     const startTime = time;
-
-//     // specify the timezone, using standard IANA timezone format
-//     const timezone = "America/New_York";
-
-//     // request the timelines with all the query string parameters as options
-//     const getTimelineParameters =  queryString.stringify({
-//         apikey,
-//         location,
-//         fields,
-//         units,
-//         timesteps,
-//         startTime,
-//         endTime,
-//         timezone,
-//     }, {arrayFormat: "comma"});
-
-//     var timeline = function() {
-//         fetch(getTimelineURL + "?" + getTimelineParameters, {method: "GET"})
-//             .then((result) => result.json(console.log(result)))
-//             .then((json) => console.log(json)
-//             .catch((error) => console.error("error: " + err))
-//         )};
-//     timeline();
-// } 
-
-document.getElementById('getWeatherBtn').addEventListener('click', getWeatherData);
-
+formatTime();
+setInterval(formatTime, 60000);
+fetchWeather(DEFAULT_ZIP);
